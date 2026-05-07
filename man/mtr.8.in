@@ -29,6 +29,9 @@ mtr \- a network diagnostic tool
 .BI \--displaymode \ MODE\c
 ]
 [\c
+.B \-\-compact\c
+]
+[\c
 .B \-\-raw\c
 ]
 [\c
@@ -221,6 +224,9 @@ Use this option to select the initial display mode: 0 (default)
 selects statistics, 1 selects the stripchart without latency
 information, and 2 selects the stripchart with latency
 information.
+.TP
+.B -\-compact
+Use this option to start the curses interface in compact mode.
 .TP
 .B \-g\fR, \fB\-\-gtk
 Use this option to force

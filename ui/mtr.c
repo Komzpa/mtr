@@ -136,6 +136,7 @@ static void __attribute__ ((__noreturn__)) usage(FILE * out)
     fputs(" -t, --curses                     use curses terminal interface\n", out);       
 #endif       
     fputs("     --displaymode MODE           select initial display mode\n", out);       
+    fputs("     --compact                    start curses interface in compact mode\n", out);
 #ifdef HAVE_GTK       
     fputs(" -g, --gtk                        use GTK+ xwindow interface\n", out);
 #endif       
@@ -302,8 +303,9 @@ static void parse_arg(
     enum {
         OPT_DISPLAYMODE = CHAR_MAX + 1,
         OPT_IPINFO4 = CHAR_MAX + 2,
+        OPT_COMPACT = CHAR_MAX + 3,
 #ifdef ENABLE_IPV6
-        OPT_IPINFO6 = CHAR_MAX + 3,
+        OPT_IPINFO6 = CHAR_MAX + 4,
 #endif /* ifdef ENABLE_IPV6 */
     };
     static const struct option long_options[] = {
@@ -332,6 +334,7 @@ static void parse_arg(
         {"json", 0, NULL, 'j'},
 #endif
         {"displaymode", 1, NULL, OPT_DISPLAYMODE},
+        {"compact", 0, NULL, OPT_COMPACT},
         {"split", 0, NULL, 'p'},        /* BL */
         /* maybe above should change to -d 'x' */
 
@@ -446,6 +449,9 @@ static void parse_arg(
             if ((DisplayModeMAX - 1) < ctl->display_mode)
                 error(EXIT_FAILURE, 0, "value out of range (%d - %d): %s",
                       DisplayModeDefault, (DisplayModeMAX - 1), optarg);
+            break;
+        case OPT_COMPACT:
+            ctl->CompactLayout = 1;
             break;
         case 'c':
             ctl->MaxPing =
