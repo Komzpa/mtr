@@ -2,8 +2,8 @@ EXTRA_DIST = \
 	BSDCOPYING \
 	SECURITY \
 	build-aux/mtr.bat \
-	img/mtr_icon.xpm
-	$(TEST_FILES)
+	img/mtr_icon.xpm \
+	img/mtr.png
 
 sbin_PROGRAMS = mtr mtr-packet
 check_PROGRAMS = test/format_number_test
@@ -182,6 +182,15 @@ test_format_number_test_SOURCES = \
 if BUILD_BASH_COMPLETION
 dist_bashcompletion_DATA = bash-completion/mtr
 endif
+
+desktopdir = $(datadir)/applications
+dist_desktop_DATA = data/mtr.desktop
+
+appstreamdir = $(datadir)/metainfo
+dist_appstream_DATA = data/mtr.metainfo.xml
+
+icondir = $(datadir)/icons/hicolor/48x48/apps
+dist_icon_DATA = img/mtr.png
 
 dist-hook:
 	$(AM_V_GEN)echo $(VERSION) > $(distdir)/.tarball-version
