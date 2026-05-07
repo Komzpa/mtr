@@ -6,7 +6,9 @@ EXTRA_DIST = \
 	$(TEST_FILES)
 
 sbin_PROGRAMS = mtr mtr-packet
+check_PROGRAMS = test/format_number_test
 TESTS = \
+	test/format_number_test \
 	test/cmdparse.py \
 	test/param.py \
 	test/probe.py
@@ -53,6 +55,7 @@ mtr_SOURCES = ui/mtr.c ui/mtr.h \
               ui/display.c ui/display.h \
               ui/report.c ui/report.h \
               ui/select.c ui/select.h \
+              ui/pretty.c ui/pretty.h \
               ui/utils.c ui/utils.h \
               packet/cmdparse.c packet/cmdparse.h \
               packet/sockaddr.c packet/sockaddr.h \
@@ -153,7 +156,7 @@ dist-windows-bin: distdir-win
 
 else  # if CYGWIN
 
-check_PROGRAMS = mtr-packet-listen
+check_PROGRAMS += mtr-packet-listen
 
 mtr_packet_SOURCES += \
 	packet/construct_unix.c packet/construct_unix.h \
@@ -165,6 +168,10 @@ mtr_packet_listen_SOURCES = \
 	test/packet_listen.c
 
 endif  # if CYGWIN
+
+test_format_number_test_SOURCES = \
+	test/format_number_test.c \
+	ui/pretty.c ui/pretty.h
 
 
 if BUILD_BASH_COMPLETION
