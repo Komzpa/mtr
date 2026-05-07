@@ -415,13 +415,16 @@ void append_command_argument(
     char *name,
     int value)
 {
-    char argument[COMMAND_BUFFER_SIZE];
-    int remaining_size;
+    size_t command_length;
+    size_t remaining_size;
 
-    remaining_size = buffer_size - strlen(command) - 1;
+    command_length = strlen(command);
+    if (command_length >= (size_t) buffer_size) {
+        return;
+    }
 
-    snprintf(argument, buffer_size, " %s %d", name, value);
-    strncat(command, argument, remaining_size);
+    remaining_size = (size_t) buffer_size - command_length;
+    snprintf(command + command_length, remaining_size, " %s %d", name, value);
 }
 
 static
@@ -431,13 +434,16 @@ void append_command_string_argument(
     char *name,
     char *value)
 {
-    char argument[COMMAND_BUFFER_SIZE];
-    int remaining_size;
+    size_t command_length;
+    size_t remaining_size;
 
-    remaining_size = buffer_size - strlen(command) - 1;
+    command_length = strlen(command);
+    if (command_length >= (size_t) buffer_size) {
+        return;
+    }
 
-    snprintf(argument, buffer_size, " %s %s", name, value);
-    strncat(command, argument, remaining_size);
+    remaining_size = (size_t) buffer_size - command_length;
+    snprintf(command + command_length, remaining_size, " %s %s", name, value);
 }
 
 
@@ -452,7 +458,8 @@ void send_probe_command(
     int time_to_live)
 {
     char command[COMMAND_BUFFER_SIZE];
-    int remaining_size;
+    size_t command_length;
+    size_t remaining_size;
     int timeout;
 
     construct_base_command(ctl, command, COMMAND_BUFFER_SIZE, sequence,
@@ -494,8 +501,9 @@ void send_probe_command(
                                        "local-device", ctl->InterfaceName);
     }
 
-    remaining_size = COMMAND_BUFFER_SIZE - strlen(command) - 1;
-    strncat(command, "\n", remaining_size);
+    command_length = strlen(command);
+    remaining_size = COMMAND_BUFFER_SIZE - command_length;
+    snprintf(command + command_length, remaining_size, "\n");
 
     /*  Send a probe using the mtr-packet subprocess  */
     if (write(cmdpipe->write_fd, command, strlen(command)) == -1) {
