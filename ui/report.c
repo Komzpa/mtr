@@ -487,17 +487,19 @@ void csv_close(
         snprint_addr(ctl, name, sizeof(name), addr);
 
         if (at == net_min(ctl)) {
-            printf("Mtr_Version,Start_Time,Status,Host,Hop,Ip,");
+            printf("Mtr_Version,Start_Time,Status,Host,Hop,Ip");
 #ifdef HAVE_IPINFO
             if (!ctl->ipinfo_no) {
-                printf("Asn,");
+                printf(",Asn");
             }
 #endif
             for (i = 0; i < MAXFLD; i++) {
                 j = ctl->fld_index[ctl->fld_active[i]];
                 if (j < 0)
                     continue;
-                printf("%s,", data_fields[j].title);
+                if (data_fields[j].key == ' ')
+                    continue;
+                printf(",%s", data_fields[j].title);
             }
             printf("\n");
         }
@@ -516,6 +518,8 @@ void csv_close(
         for (i = 0; i < MAXFLD; i++) {
             j = ctl->fld_index[ctl->fld_active[i]];
             if (j < 0)
+                continue;
+            if (data_fields[j].key == ' ')
                 continue;
 
             /* 1000.0 is a temporary hack for stats usec to ms, impacted net_loss. */
