@@ -768,6 +768,9 @@ int net_open(
 {
     int err;
 
+    if (!addrcmp(sockaddr_addr_offset(res->ai_addr), &ctl->unspec_addr, res->ai_family))
+        return -1;
+
     /*  Spawn the mtr-packet child process  */
     err = open_command_pipe(ctl, &packet_command_pipe);
     if (err) {
