@@ -247,9 +247,10 @@ void execute_packet_child(
     if (path_end != NULL) {
         size_t dir_length = path_end - myname + 1;
 
-        if (dir_length + strlen(MTR_PACKET_NAME) < sizeof(buf)) {
-            memcpy(buf, myname, dir_length);
-            strcpy(buf + dir_length, MTR_PACKET_NAME);
+        if (dir_length < sizeof(buf) &&
+            snprintf(buf, sizeof(buf), "%.*s%s",
+                     (int) dir_length, myname, MTR_PACKET_NAME)
+            < (int) sizeof(buf)) {
             mtr_packet_path = buf;
             execl(mtr_packet_path, MTR_PACKET_NAME, (char *) NULL);
         }
