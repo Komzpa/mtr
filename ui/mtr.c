@@ -124,6 +124,7 @@ static void __attribute__ ((__noreturn__)) usage(FILE * out)
 #endif       
     fputs(" -r, --report                     output using report mode\n", out);
     fputs(" -w, --report-wide                output wide report\n", out);
+    fputs("     --report-on-exit             print report after curses exits\n", out);
     fputs(" -c, --report-cycles COUNT        set the number of pings sent\n", out);       
 #ifdef HAVE_JANSSON       
     fputs(" -j, --json                       output json\n", out);
@@ -304,8 +305,9 @@ static void parse_arg(
         OPT_DISPLAYMODE = CHAR_MAX + 1,
         OPT_IPINFO4 = CHAR_MAX + 2,
         OPT_COMPACT = CHAR_MAX + 3,
+        OPT_REPORT_ON_EXIT = CHAR_MAX + 4,
 #ifdef ENABLE_IPV6
-        OPT_IPINFO6 = CHAR_MAX + 4,
+        OPT_IPINFO6 = CHAR_MAX + 5,
 #endif /* ifdef ENABLE_IPV6 */
     };
     static const struct option long_options[] = {
@@ -321,6 +323,7 @@ static void parse_arg(
 
         {"report", 0, NULL, 'r'},
         {"report-wide", 0, NULL, 'w'},
+        {"report-on-exit", 0, NULL, OPT_REPORT_ON_EXIT},
         {"xml", 0, NULL, 'x'},
 #ifdef HAVE_CURSES
         {"curses", 0, NULL, 't'},
@@ -414,6 +417,9 @@ static void parse_arg(
         case 'w':
             ctl->reportwide = 1;
             ctl->DisplayMode = DisplayReport;
+            break;
+        case OPT_REPORT_ON_EXIT:
+            ctl->ReportOnExit = 1;
             break;
 #ifdef HAVE_CURSES
         case 't':
