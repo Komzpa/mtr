@@ -43,11 +43,12 @@ dist_man_MANS = mtr.8 mtr-packet.8
 PATHFILES += man/mtr.8 man/mtr-packet.8
 
 install-exec-hook:
+	mtr_packet_name=`echo mtr-packet | sed '$(transform)'`; \
 	if command -v setcap >/dev/null 2>&1; then \
-		setcap cap_net_raw+ep $(DESTDIR)$(sbindir)/mtr-packet \
-		|| chmod u+s $(DESTDIR)$(sbindir)/mtr-packet; \
+		setcap cap_net_raw+ep $(DESTDIR)$(sbindir)/$$mtr_packet_name \
+		|| chmod u+s $(DESTDIR)$(sbindir)/$$mtr_packet_name; \
 	else \
-		chmod u+s $(DESTDIR)$(sbindir)/mtr-packet; \
+		chmod u+s $(DESTDIR)$(sbindir)/$$mtr_packet_name; \
 	fi
 
 mtr_SOURCES = ui/mtr.c ui/mtr.h \
