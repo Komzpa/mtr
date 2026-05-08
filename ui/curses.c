@@ -223,7 +223,7 @@ int mtr_curses_keyaction(
         return ActionNone;
     case 'b':
         mvprintw(2, 0, "Ping Bit Pattern: %d\n", ctl->bitpattern);
-        mvprintw(3, 0, "Pattern Range: 0(0x00)-255(0xff), <0 random.\n");
+        mvprintw(3, 0, "Pattern Range: 0(0x00)-255(0xff), -1 random.\n");
         move(2, 18);
         refresh();
         while ((c = getch()) != '\n' && i < MAXFLD) {
@@ -234,9 +234,12 @@ int mtr_curses_keyaction(
             buf[i++] = c;       /* need more checking on 'c' */
         }
         buf[i] = '\0';
-        ctl->bitpattern = atoi(buf);
-        if (ctl->bitpattern > 255)
-            ctl->bitpattern = -1;
+        i = atoi(buf);
+        if (i < -1 || i > 255) {
+            printf("\a");
+            return ActionNone;
+        }
+        ctl->bitpattern = i;
         return ActionNone;
     case 'i':
         mvprintw(2, 0, "Interval : %0.0f\n\n", ctl->WaitTime);
@@ -381,7 +384,7 @@ int mtr_curses_keyaction(
             ("  m <n>   set the max time-to-live, default n= # of hops\n");
         printw("  s <n>   set the packet size to n or random(n<0)\n");
         printw
-            ("  b <c>   set ping bit pattern to c(0..255) or random(c<0)\n");
+            ("  b <c>   set ping bit pattern to c(0..255) or random(c=-1)\n");
         printw("  Q <t>   set ping packet's TOS to t\n");
         printw("  u       switch between ICMP ECHO and UDP datagrams\n");
         printw("  t       switch between ICMP ECHO and TCP\n");
